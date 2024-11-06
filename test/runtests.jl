@@ -33,7 +33,7 @@ using OptimizationMOI
             @info "Testing" framework case
             test_case = joinpath(dirname(@__DIR__), "data", case)
             result = solve_opf(test_case, Val(framework))
-            if framework == :Optim
+            if framework == :Optim  # does not converge to feasible solution
                 @test_skip validate_result(test_case, result)
             else
                 validate_result(test_case, result)
