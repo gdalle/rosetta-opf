@@ -1,7 +1,13 @@
-using Test
-import PowerModels
+"""
+    validate_result(file_name::String, result::Dict)
 
-function validate_result(file_name::String, result)
+Take a `result` for the ACOPF problem encoded in file `file_name` and run a series of tests to verify its correctness.
+
+# See also
+
+- [`solve_opf`](@ref)
+"""
+function validate_result(file_name::String, result::Dict)
     for k in [
         "case",
         "variables",

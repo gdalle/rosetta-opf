@@ -5,11 +5,14 @@
 # only the built-in AD library is supported
 #
 
+module RosettaOPFBenchmarksJuMPExt
+
+import RosettaOPFBenchmarks as Rosetta
 import PowerModels
 import Ipopt
 import JuMP
 
-function solve_opf(file_name)
+function Rosetta.solve_opf(file_name, ::Val{:JuMP})
     time_data_start = time()
 
     data = PowerModels.parse_file(file_name)
@@ -170,6 +173,8 @@ function solve_opf(file_name)
     )
 end
 
-if isinteractive() == false
-    solve_opf("$(@__DIR__)/data/opf_warmup.m")
+# if isinteractive() == false
+#     solve_opf("$(@__DIR__)/data/opf_warmup.m")
+# end
+
 end
