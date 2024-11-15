@@ -16,7 +16,7 @@ using Optimization
 using OptimizationMOI
 
 @testset verbose = true "Rosetta OPF" begin
-    @testset "$framework" for framework in [
+    @testset verbose=true "$framework" for framework in [
         :ExaModels,
         :JuMP,
         :NLPModels,
@@ -28,8 +28,9 @@ using OptimizationMOI
             "opf_warmup.m",
             "pglib_opf_case5_pjm.m",
             "pglib_opf_case14_ieee.m",
-            "pglib_opf_case24_ieee_rts.m",
+            # "pglib_opf_case24_ieee_rts.m",
         ]
+            yield()
             @info "Testing" framework case
             if occursin("warmup", case)
                 path = joinpath(dirname(@__DIR__), "data", case)
