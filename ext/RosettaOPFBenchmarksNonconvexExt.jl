@@ -10,8 +10,8 @@ module RosettaOPFBenchmarksNonconvexExt
 import RosettaOPFBenchmarks as Rosetta
 import PowerModels
 import Nonconvex
-Nonconvex.@load Ipopt
-
+using Nonconvex: OrderedDict
+import NonconvexIpopt
 
 function Rosetta.solve_opf(file_name, ::Val{:Nonconvex})
     time_data_start = time()
