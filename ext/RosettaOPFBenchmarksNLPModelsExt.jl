@@ -12,6 +12,9 @@
 # https://github.com/SciML/SciMLBenchmarks.jl/blob/master/benchmarks/OptimizationFrameworks/optimal_powerflow.jmd
 #
 
+module RosettaOPFBenchmarksNLPModelsExt
+
+import RosettaOPFBenchmarks as Rosetta
 import PowerModels
 import ADNLPModels
 import ConcreteStructs
@@ -494,7 +497,7 @@ function build_opf_optimization_prob(dataset)
     )
 end
 
-function solve_opf(file_name)
+function Rosetta.solve_opf(file_name, ::Val{:NLPModels})
     start = time()
     dataset = load_and_setup_data(file_name);
     data_load_time = time() - start
@@ -537,6 +540,8 @@ function solve_opf(file_name)
     )
 end
 
-if isinteractive() == false
-    solve_opf("$(@__DIR__)/data/opf_warmup.m")
+# if isinteractive() == false
+#     solve_opf("$(@__DIR__)/data/opf_warmup.m")
+# end
+
 end

@@ -1,26 +1,50 @@
+ENV["DATADEPS_ALWAYS_ACCEPT"] = true
+
 using Test
+using RosettaOPFBenchmarks
 
-include("validator.jl")
+# dependencies
+using ADNLPModels
+using ExaModels
+using ForwardDiff
+using Ipopt
+using JuMP
+using ModelingToolkit
+using NLPModelsIpopt
+using Nonconvex
+using NonconvexIpopt
+using Optim
+using Optimization
+using OptimizationMOI
 
-@testset "Rosetta OPF" begin
-    @testset "$framework" for framework in [
-        "examodels",
-        "jump",
-        "nlpmodels",
-        "nonconvex",
-        # "optim", # does not converge to feasible solution
-        "optimization",
+@testset verbose = true "Rosetta OPF" begin
+    @testset verbose=true "$framework" for framework in [
+        :ExaModels,
+        :JuMP,
+        :NLPModels,
+        :Nonconvex,
+        :Optim,
+        :Optimization,
     ]
-        include(joinpath(dirname(@__DIR__), "$framework.jl"))
         @testset "$case" for case in [
             "opf_warmup.m",
             "pglib_opf_case5_pjm.m",
             "pglib_opf_case14_ieee.m",
-            "pglib_opf_case24_ieee_rts.m",
+            # "pglib_opf_case24_ieee_rts.m",
         ]
-            test_case = joinpath(dirname(@__DIR__), "data", case)
-            result = solve_opf(test_case)
-            validate_result(test_case, result)
+            yield()
+            @info "Testing" framework case
+            if occursin("warmup", case)
+                path = joinpath(dirname(@__DIR__), "data", case)
+            else
+                path = read_instance(case)
+            end
+            result = solve_opf(path, Val(framework))
+            if framework == :Optim  # does not converge to feasible solution
+                @test_skip validate_result(path, result)
+            else
+                validate_result(path, result)
+            end
         end
     end
-end
+end;

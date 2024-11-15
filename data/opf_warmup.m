@@ -2,7 +2,7 @@
 %   This matpower case was developed as part of the rosetta-opf project.
 %
 %   It is designed to be used for warming up the Julia JIT for solving similar
-%   AC-OPF porblems. This network data is designed to cover a wide range of
+%   AC-OPF problems. This network data is designed to cover a wide range of
 %   model features in a minimal case file.  It is not representative of a
 %   realistic power network.
 %

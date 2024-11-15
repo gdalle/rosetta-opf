@@ -5,12 +5,15 @@
 # only the built-in AD library is supported
 #
 
+module RosettaOPFBenchmarksExaModelsExt
+
+import RosettaOPFBenchmarks as Rosetta
 import PowerModels
 import ExaModels
 import NLPModelsIpopt
 import LinearAlgebra
 
-function solve_opf(file_name)
+function Rosetta.solve_opf(file_name, ::Val{:ExaModels})
     time_data_start = time()
 
     data = PowerModels.parse_file(file_name)
@@ -278,8 +281,8 @@ end
 
 write_out_tuple((i,j,k)) = "$(i)_$(j)_$(k)"
 
-if isinteractive() == false
-    solve_opf("$(@__DIR__)/data/opf_warmup.m")
+# if isinteractive() == false
+#     solve_opf("$(@__DIR__)/data/opf_warmup.m")
+# end
+
 end
-
-

@@ -5,13 +5,15 @@
 # currently does not converge due to an upstream issue with the AD backend Zygote: https://github.com/JuliaNonconvex/Nonconvex.jl/issues/130
 #
 
+module RosettaOPFBenchmarksNonconvexExt
 
+import RosettaOPFBenchmarks as Rosetta
 import PowerModels
 import Nonconvex
-Nonconvex.@load Ipopt
+using Nonconvex: OrderedDict
+import NonconvexIpopt
 
-
-function solve_opf(file_name)
+function Rosetta.solve_opf(file_name, ::Val{:Nonconvex})
     time_data_start = time()
 
     data = PowerModels.parse_file(file_name)
@@ -265,6 +267,8 @@ function solve_opf(file_name)
     )
 end
 
-if isinteractive() == false
-    solve_opf("$(@__DIR__)/data/opf_warmup.m")
+# if isinteractive() == false
+#     solve_opf("$(@__DIR__)/data/opf_warmup.m")
+# end
+
 end
