@@ -15,7 +15,7 @@ using Optim
 using Optimization
 using OptimizationMOI
 
-@testset verbose=true "Rosetta OPF" begin
+@testset verbose = true "Rosetta OPF" begin
     @testset "$framework" for framework in [
         :ExaModels,
         :JuMP,
@@ -31,13 +31,17 @@ using OptimizationMOI
             "pglib_opf_case24_ieee_rts.m",
         ]
             @info "Testing" framework case
-            test_case = joinpath(dirname(@__DIR__), "data", case)
-            result = solve_opf(test_case, Val(framework))
-            if framework == :Optim  # does not converge to feasible solution
-                @test_skip validate_result(test_case, result)
+            if occursin("warmup", case)
+                path = joinpath(dirname(@__DIR__), "data", case)
             else
-                validate_result(test_case, result)
+                path = read_instance(case)
+            end
+            result = solve_opf(path, Val(framework))
+            if framework == :Optim  # does not converge to feasible solution
+                @test_skip validate_result(path, result)
+            else
+                validate_result(path, result)
             end
         end
     end
-end
+end;

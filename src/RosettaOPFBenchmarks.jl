@@ -1,42 +1,35 @@
 module RosettaOPFBenchmarks
 
+using DataDeps
 using PowerModels
 using ConcreteStructs
 using LinearAlgebra
 using Test
 
-"""
-    solve_opf(file_name::String, ::Val{PackageChoice})
+include("read.jl")
+include("solve.jl")
+include("validate.jl")
 
-Solve the ACOPF problem encoded in file `file_name` with the given `PackageChoice`, which must be a `Symbol` among the following options:
-
-- `:ExaModels`
-- `:JuMP`
-- `:NLPModels`
-- `:Nonconvex`
-- `:Optim`
-- `:Optimization`
-
-Return a result encoded as a dictionary.
-
-# Example
-
-```julia
-using RosettaOPFBenchmarks
-import ADNLPModels, NLPModelsIpopt
-
-solve_opf("data/opf_warmup.m", Val(:NLPModels))
-```
-
-# See also
-
-- [`validate_result`](@ref)
-"""
-function solve_opf end
-
-include("validator.jl")
-
+export read_instance
 export solve_opf
 export validate_result
+
+function __init__()
+    DataDeps.register(
+        DataDep(
+            "pglib-opf",
+            """
+            Benchmarks for the Optimal Power Flow Problem.
+
+            URL: <https://github.com/power-grid-lib/pglib-opf>
+            
+            Maintainers: IEEE PES Task Force on Benchmarks for Validation of Emerging Power System Algorithms (<https://power-grid-lib.github.io/>).
+            """,
+            # modify link below to update version of `pglib-opf`
+            "https://github.com/power-grid-lib/pglib-opf/archive/refs/tags/v23.07.tar.gz";
+            post_fetch_method=DataDeps.unpack
+        ),
+    )
+end
 
 end # module RosettaOPFBenchmarks
